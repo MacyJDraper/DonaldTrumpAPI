@@ -12,11 +12,30 @@ namespace DonaldTrumpAPI
             string url = "https://api.whatdoestrumpthink.com/api/v1/quotes/random";
             HttpClient client = new HttpClient();
             string jsonString = client.GetStringAsync(url).Result;
-            Console.WriteLine("\nJson Response from API:");
-            Console.WriteLine(jsonString);
             string quote = JObject.Parse(jsonString).GetValue("message").ToString();
-            Console.WriteLine("\nOnly the Trum quote:");
-            Console.WriteLine(quote);
+
+            Console.WriteLine("\nTrum quote:");
+
+            int maxCharacterCount = Console.WindowWidth;
+            string[] quoteWords = quote.Split(' ');
+            string currentLine = "";
+
+            foreach (string word in quoteWords)
+            {
+                if ((currentLine + word).Length >= maxCharacterCount) 
+                {
+                    Console.WriteLine(currentLine);
+                    currentLine = word;
+                }
+                else
+                {
+                    if (currentLine.Length == 0)
+                        currentLine = word;
+                    else
+                        currentLine += " " + word;
+                }
+            }
+            Console.WriteLine(currentLine);
         }
     }
 }
